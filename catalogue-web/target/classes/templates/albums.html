@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:method="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Avaliar Álbuns</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Avaliar Álbuns</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Artista</th>
+        <th>Álbum</th>
+        <th>Músicas</th>
+        <th>Pontuação</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="album : ${albums}">
+        <td th:text="${album.id}"></td>
+        <td th:text="${album.artist?.name}"></td>
+        <td>
+            <span th:text="${album.title}"></span>
+            <span th:if="${album.releaseYear}"
+                  th:text="' (' + ${album.releaseYear} + ')'"></span>
+        </td>
+        <td>
+            <ol th:if="${not #lists.isEmpty(album.songs)}">
+                <li th:each="song : ${album.songs}"
+                    th:text="|${song.songName}|">
+                </li>
+            </ol>
+            <span th:if="${#lists.isEmpty(album.songs)}">Nenhuma música</span>
+
+        </td>
+
+        <td th:action="@{/rate-album}" th:object="${album}" method="post">
+            <button type="button">+</button>
+            <button type="button">-</button>
+        </td>
+
+        <td  th:action="@{/send-rating}" th:object="${album}" method="post">
+            <button type="button">Enviar Avaliação</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
