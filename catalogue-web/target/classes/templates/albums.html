@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:method="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Avaliar Álbuns</title>
@@ -18,11 +18,47 @@
         th {
             background-color: #f2f2f2;
         }
+
+        form {
+            margin: 0;
+        }
     </style>
+    <script>
+        function incrementar(id) {
+            const input = document.getElementById('rate-' + id);
+            let value = parseInt(input.value) || 0;
+            if (value < 5) {
+                input.value = value + 1;
+            }
+        }
+
+        function decrementar(id) {
+            const input = document.getElementById('rate-' + id);
+            let value = parseInt(input.value) || 0;
+            if (value > 0) {
+                input.value = value - 1;
+            }
+        }
+
+    </script>
 </head>
 <body>
 
 <h1>Avaliar Álbuns</h1>
+<div th:if="${mensagem}" style="color: green;">
+    <p th:text="${mensagem}"></p>
+
+    <div th:if="${albumAvaliado}">
+        <p><strong>ID:</strong> <span th:text="${albumAvaliado.id}"></span></p>
+        <p><strong>Título:</strong> <span th:text="${albumAvaliado.title}"></span></p>
+        <p><strong>Artista:</strong> <span th:text="${albumAvaliado.artist?.name}"></span></p>
+        <p><strong>Pontuação:</strong> <span th:text="${albumAvaliado.rate}"></span></p>
+    </div>
+</div>
+
+<div th:if="${erro}" style="color: red;">
+    <p th:text="${erro}"></p>
+</div>
 
 <table>
     <thead>
@@ -32,6 +68,7 @@
         <th>Álbum</th>
         <th>Músicas</th>
         <th>Pontuação</th>
+        <th>Ação</th>
     </tr>
     </thead>
     <tbody>
@@ -40,26 +77,28 @@
         <td th:text="${album.artist?.name}"></td>
         <td>
             <span th:text="${album.title}"></span>
-            <span th:if="${album.releaseYear}"
-                  th:text="' (' + ${album.releaseYear} + ')'"></span>
+            <span th:if="${album.releaseYear}" th:text="' (' + ${album.releaseYear} + ')'"></span>
         </td>
         <td>
             <ol th:if="${not #lists.isEmpty(album.songs)}">
-                <li th:each="song : ${album.songs}"
-                    th:text="|${song.songName}|">
-                </li>
+                <li th:each="song : ${album.songs}" th:text="${song.songName}"></li>
             </ol>
             <span th:if="${#lists.isEmpty(album.songs)}">Nenhuma música</span>
-
         </td>
+        <td colspan="2">
+            <form th:action="@{send-rating}" th:object="${album}" method="post" style="display: inline;">
+                <input type="hidden" name="action" value="save"/>
+                <input type="hidden" name="id" th:value="${album.id}" />
+                <button type="button" th:onclick="'decrementar(' + ${album.id} + ')'">-</button>
+                <input type="number"
+                       th:id="'rate-' + ${album.id}"
+                       name="rate"
+                       th:value="${album.rate != null ? album.rate : 0}"
+                       readonly/>
+                <button type="button" th:onclick="'incrementar(' + ${album.id} + ')'">+</button>
+                <button type="submit" th:onclick="">Salvar</button>
 
-        <td th:action="@{/rate-album}" th:object="${album}" method="post">
-            <button type="button">+</button>
-            <button type="button">-</button>
-        </td>
-
-        <td  th:action="@{/send-rating}" th:object="${album}" method="post">
-            <button type="button">Enviar Avaliação</button>
+            </form>
         </td>
     </tr>
     </tbody>

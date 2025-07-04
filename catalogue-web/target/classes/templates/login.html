@@ -7,7 +7,7 @@
 <body>
 
     <h1>Login</h1>
-    <form th:action="@{/albums}" th:object="${login}" method="post">
+    <form th:action="@{/logar}" th:object="${login}" method="post">
         <label>Login:</label>
         <input type="text" th:field="*{login}" required />
         <br/>

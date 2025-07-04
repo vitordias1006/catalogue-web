@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.com.rhweb</groupId>
-    <artifactId>catalogue-web</artifactId>
+    <artifactId>catalog-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>catalogue-web</name>
     <description>catalogue-web</description>

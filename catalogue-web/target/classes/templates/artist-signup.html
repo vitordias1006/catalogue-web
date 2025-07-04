@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Artista</title>
+</head>
+<body>
+
+<h1>Cadastro de Artista</h1>
+
+<form action="@{/new-artist}" th:object="${artist}" method="post"></form>
+    <label>Nome do Artista</label>
+    <input type="text" th:field="*{nome}">
+
+</body>
+</html>
